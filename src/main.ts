@@ -57,7 +57,7 @@ async function run(): Promise<void> {
 
     // download if one is missing
     if (!tailscale || !tailscaled) {
-      core.debug("downloading tailscale")
+      core.debug('downloading tailscale')
       const paths = await downloadCLI(version)
       tailscale = paths[0]
       tailscaled = paths[1]
