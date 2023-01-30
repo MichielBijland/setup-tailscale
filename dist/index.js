@@ -46,7 +46,7 @@ exports.getReleaseURL = exports.downloadCLI = void 0;
 const os = __importStar(__nccwpck_require__(2037));
 const core = __importStar(__nccwpck_require__(2186));
 const cache = __importStar(__nccwpck_require__(7784));
-const exec = __importStar(__nccwpck_require__(1514));
+// import * as exec from '@actions/exec'
 const semver = __importStar(__nccwpck_require__(1383));
 const path_1 = __importDefault(__nccwpck_require__(1017));
 const tailscale = 'tailscale';
@@ -57,37 +57,36 @@ function run() {
             core.setFailed('Only linux is currently supported.');
         }
         // get authkey
-        let authkey;
-        const client_id = core.getInput('client_id');
-        const client_secret = core.getInput('client_secret');
-        if (client_id && client_secret) {
-            /* get a access token from client_id and client_secret
-            curl -d "client_id=${client_id}" -d "client_secret=${client_secret}" \
-             "https://api.tailscale.com/api/v2/oauth/token"
-            */
-            /* create a short lived access token for devices
-            curl --location --request POST 'https://api.tailscale.com/api/v2/tailnet/-/keys' \
-            --header 'Authorization: Bearer tskey-api-***' \
-            --header 'Content-Type: application/json' \
-            --data-raw '{
-              "capabilities": {
-                "devices": {
-                  "create": {
-                    "reusable": false,
-                    "ephemeral": true,
-                    "preauthorized": true,
-                    "tags": [ "tag:github" ]
-                  }
-                }
-              },
-              "expirySeconds": 90
-            }'
-            */
-            authkey = 'replace';
-        }
-        else {
-            authkey = core.getInput('authkey');
-        }
+        // let authkey: string
+        // const client_id: string = core.getInput('client_id')
+        // const client_secret: string = core.getInput('client_secret')
+        // if (client_id && client_secret) {
+        //   /* get a access token from client_id and client_secret
+        //   curl -d "client_id=${client_id}" -d "client_secret=${client_secret}" \
+        //    "https://api.tailscale.com/api/v2/oauth/token"
+        //   */
+        //   /* create a short lived access token for devices
+        //   curl --location --request POST 'https://api.tailscale.com/api/v2/tailnet/-/keys' \
+        //   --header 'Authorization: Bearer tskey-api-***' \
+        //   --header 'Content-Type: application/json' \
+        //   --data-raw '{
+        //     "capabilities": {
+        //       "devices": {
+        //         "create": {
+        //           "reusable": false,
+        //           "ephemeral": true,
+        //           "preauthorized": true,
+        //           "tags": [ "tag:github" ]
+        //         }
+        //       }
+        //     },
+        //     "expirySeconds": 90
+        //   }'
+        //   */
+        //   authkey = 'replace'
+        // } else {
+        //   // authkey = core.getInput('authkey')
+        // }
         try {
             const version = core.getInput('version');
             // is this version already in our cache
@@ -105,12 +104,16 @@ function run() {
             core.addPath(toolPath);
             core.info('added paths');
             // start tailscaled
-            const tailscaled = path_1.default.join(toolPath, 'tailscaled');
-            yield exec.exec(`sudo ${tailscaled} --state=tailscaled.state --socket=tailscaled.sock 2>tailscaled.log &`);
-            const args = core.getInput('args');
-            const final_args = ['up', '--authkey', authkey].concat(args.split(' '));
-            // tailscale up??
-            yield exec.exec('tailscale', final_args);
+            // const tailscaled = path.join(toolPath, 'tailscaled')
+            // await exec.exec(
+            //   `sudo ${tailscaled} --state=tailscaled.state --socket=tailscaled.sock 2>tailscaled.log &`
+            // )
+            // const args: string = core.getInput('args')
+            // const final_args: string[] = ['up', '--authkey', authkey].concat(
+            //   args.split(' ')
+            // )
+            // // tailscale up??
+            // await exec.exec('tailscale', final_args)
         }
         catch (error) {
             if (error instanceof Error)

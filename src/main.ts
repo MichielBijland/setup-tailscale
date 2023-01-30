@@ -1,7 +1,7 @@
 import * as os from 'os'
 import * as core from '@actions/core'
 import * as cache from '@actions/tool-cache'
-import * as exec from '@actions/exec'
+// import * as exec from '@actions/exec'
 import * as semver from 'semver'
 import path from 'path'
 
@@ -14,36 +14,36 @@ async function run(): Promise<void> {
   }
 
   // get authkey
-  let authkey: string
-  const client_id: string = core.getInput('client_id')
-  const client_secret: string = core.getInput('client_secret')
-  if (client_id && client_secret) {
-    /* get a access token from client_id and client_secret
-    curl -d "client_id=${client_id}" -d "client_secret=${client_secret}" \
-     "https://api.tailscale.com/api/v2/oauth/token"
-    */
-    /* create a short lived access token for devices
-    curl --location --request POST 'https://api.tailscale.com/api/v2/tailnet/-/keys' \
-    --header 'Authorization: Bearer tskey-api-***' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{
-      "capabilities": {
-        "devices": {
-          "create": {
-            "reusable": false,
-            "ephemeral": true,
-            "preauthorized": true,
-            "tags": [ "tag:github" ]
-          }
-        }
-      },
-      "expirySeconds": 90
-    }'
-    */
-    authkey = 'replace'
-  } else {
-    authkey = core.getInput('authkey')
-  }
+  // let authkey: string
+  // const client_id: string = core.getInput('client_id')
+  // const client_secret: string = core.getInput('client_secret')
+  // if (client_id && client_secret) {
+  //   /* get a access token from client_id and client_secret
+  //   curl -d "client_id=${client_id}" -d "client_secret=${client_secret}" \
+  //    "https://api.tailscale.com/api/v2/oauth/token"
+  //   */
+  //   /* create a short lived access token for devices
+  //   curl --location --request POST 'https://api.tailscale.com/api/v2/tailnet/-/keys' \
+  //   --header 'Authorization: Bearer tskey-api-***' \
+  //   --header 'Content-Type: application/json' \
+  //   --data-raw '{
+  //     "capabilities": {
+  //       "devices": {
+  //         "create": {
+  //           "reusable": false,
+  //           "ephemeral": true,
+  //           "preauthorized": true,
+  //           "tags": [ "tag:github" ]
+  //         }
+  //       }
+  //     },
+  //     "expirySeconds": 90
+  //   }'
+  //   */
+  //   authkey = 'replace'
+  // } else {
+  //   // authkey = core.getInput('authkey')
+  // }
 
   try {
     const version: string = core.getInput('version')
@@ -68,18 +68,18 @@ async function run(): Promise<void> {
 
     // start tailscaled
 
-    const tailscaled = path.join(toolPath, 'tailscaled')
-    await exec.exec(
-      `sudo ${tailscaled} --state=tailscaled.state --socket=tailscaled.sock 2>tailscaled.log &`
-    )
+    // const tailscaled = path.join(toolPath, 'tailscaled')
+    // await exec.exec(
+    //   `sudo ${tailscaled} --state=tailscaled.state --socket=tailscaled.sock 2>tailscaled.log &`
+    // )
 
-    const args: string = core.getInput('args')
-    const final_args: string[] = ['up', '--authkey', authkey].concat(
-      args.split(' ')
-    )
+    // const args: string = core.getInput('args')
+    // const final_args: string[] = ['up', '--authkey', authkey].concat(
+    //   args.split(' ')
+    // )
 
-    // tailscale up??
-    await exec.exec('tailscale', final_args)
+    // // tailscale up??
+    // await exec.exec('tailscale', final_args)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
