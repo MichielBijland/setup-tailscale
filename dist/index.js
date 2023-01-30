@@ -97,12 +97,13 @@ function run() {
             tailscaled = cache.find(toolNames[1], version);
             // download if one is missing
             if (!tailscale || !tailscaled) {
-                core.debug('downloading tailscale');
+                core.info('downloading tailscale');
                 const paths = yield downloadCLI(version);
                 tailscale = paths[0];
                 tailscaled = paths[1];
             }
             // add both to path for this and future actions to use
+            core.info(`setting tailscale: ${tailscale}`);
             core.addPath(tailscale);
             core.addPath(tailscaled);
             // start tailscaled
@@ -128,9 +129,9 @@ function getArch() {
 function downloadCLI(version) {
     return __awaiter(this, void 0, void 0, function* () {
         const url = getReleaseURL(version);
-        core.debug(`downloading ${url}`);
+        core.info(`downloading ${url}`);
         const artifactPath = yield cache.downloadTool(url);
-        core.debug(`artifactPath: ${artifactPath}`);
+        core.info(`artifactPath: ${artifactPath}`);
         const dirPath = yield cache.extractTar(artifactPath);
         return Promise.all([
             cache.cacheFile(path_1.default.join(dirPath, toolNames[0]), toolNames[0], toolNames[0], version),

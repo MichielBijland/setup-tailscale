@@ -57,13 +57,14 @@ async function run(): Promise<void> {
 
     // download if one is missing
     if (!tailscale || !tailscaled) {
-      core.debug('downloading tailscale')
+      core.info('downloading tailscale')
       const paths = await downloadCLI(version)
       tailscale = paths[0]
       tailscaled = paths[1]
     }
 
     // add both to path for this and future actions to use
+    core.info(`setting tailscale: ${tailscale}`)
     core.addPath(tailscale)
     core.addPath(tailscaled)
 
@@ -92,9 +93,9 @@ function getArch(): string {
 
 export async function downloadCLI(version: string): Promise<[string, string]> {
   const url = getReleaseURL(version)
-  core.debug(`downloading ${url}`)
+  core.info(`downloading ${url}`)
   const artifactPath = await cache.downloadTool(url)
-  core.debug(`artifactPath: ${artifactPath}`)
+  core.info(`artifactPath: ${artifactPath}`)
   const dirPath = await cache.extractTar(artifactPath)
   return Promise.all([
     cache.cacheFile(
