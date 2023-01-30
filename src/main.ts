@@ -67,10 +67,9 @@ async function run(): Promise<void> {
     core.info('added paths')
 
     // start tailscaled
-    await exec.exec('tailscaled', [
-      '--state=tailscaled.state',
-      '--socket=tailscaled.sock'
-    ])
+    await exec.exec(
+      'sudo tailscaled --state=tailscaled.state --socket=tailscaled.sock'
+    )
 
     const args: string = core.getInput('args')
     const final_args: string[] = ['up', '--authkey', authkey].concat(
