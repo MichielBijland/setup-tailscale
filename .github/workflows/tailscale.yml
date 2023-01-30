@@ -21,12 +21,12 @@ jobs:
           authkey: ${{ secrets.AUTH_KEY }}
 
       - name: Run Tailscale
-          shell: bash
-          env:
-            TAILSCALE_AUTHKEY: ${{ secrets.AUTH_KEY }}
-          run: |
-            sudo tailscaled 2>~/tailscaled.log &
-            sudo tailscale up --authkey ${TAILSCALE_AUTHKEY} --accept-routes --shields-up
+        shell: bash
+        env:
+          TAILSCALE_AUTHKEY: ${{ secrets.AUTH_KEY }}
+        run: |
+          sudo tailscaled 2>~/tailscaled.log &
+          sudo tailscale up --authkey ${TAILSCALE_AUTHKEY} --accept-routes --shields-up
 
       - name: check for hello.ipn.dev in netmap
         run:
