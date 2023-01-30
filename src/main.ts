@@ -97,6 +97,8 @@ export async function downloadCLI(version: string): Promise<[string, string]> {
   const artifactPath = await cache.downloadTool(url)
   core.info(`artifactPath: ${artifactPath}`)
   const dirPath = await cache.extractTar(artifactPath)
+  core.info(`dirPath: ${dirPath}`)
+
   return Promise.all([
     cache.cacheFile(
       path.join(dirPath, toolNames[0]),

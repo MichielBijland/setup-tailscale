@@ -133,6 +133,7 @@ function downloadCLI(version) {
         const artifactPath = yield cache.downloadTool(url);
         core.info(`artifactPath: ${artifactPath}`);
         const dirPath = yield cache.extractTar(artifactPath);
+        core.info(`dirPath: ${dirPath}`);
         return Promise.all([
             cache.cacheFile(path_1.default.join(dirPath, toolNames[0]), toolNames[0], toolNames[0], version),
             cache.cacheFile(path_1.default.join(dirPath, toolNames[1]), toolNames[1], toolNames[1], version)
