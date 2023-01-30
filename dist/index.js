@@ -92,15 +92,18 @@ function run() {
         try {
             const version = core.getInput('version');
             // is this version already in our cache
-            let binPath = cache.find(tailscale, version);
+            let toolPath = cache.find(tailscale, version);
             // download if one is missing
-            if (binPath) {
+            if (!toolPath) {
                 core.info('downloading tailscale');
-                binPath = yield downloadCLI(version);
+                toolPath = yield downloadCLI(version);
+            }
+            else {
+                core.info('using cached directory');
             }
             // add both to path for this and future actions to use
-            core.addPath(path_1.default.join(binPath, tailscale));
-            core.addPath(path_1.default.join(binPath, tailscaled));
+            core.addPath(path_1.default.join(toolPath, tailscale));
+            core.addPath(path_1.default.join(toolPath, tailscaled));
             // start tailscaled
             yield exec.exec('tailscaled');
             const args = core.getInput('args');

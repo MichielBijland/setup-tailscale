@@ -50,17 +50,19 @@ async function run(): Promise<void> {
     const version: string = core.getInput('version')
 
     // is this version already in our cache
-    let binPath = cache.find(tailscale, version)
+    let toolPath = cache.find(tailscale, version)
 
     // download if one is missing
-    if (binPath) {
+    if (!toolPath) {
       core.info('downloading tailscale')
-      binPath = await downloadCLI(version)
+      toolPath = await downloadCLI(version)
+    } else {
+      core.info('using cached directory')
     }
 
     // add both to path for this and future actions to use
-    core.addPath(path.join(binPath, tailscale))
-    core.addPath(path.join(binPath, tailscaled))
+    core.addPath(path.join(toolPath, tailscale))
+    core.addPath(path.join(toolPath, tailscaled))
 
     // start tailscaled
     await exec.exec('tailscaled')
