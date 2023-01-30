@@ -97,7 +97,7 @@ function run() {
             tailscaled = cache.find(toolNames[1], version);
             // download if one is missing
             if (!tailscale || !tailscaled) {
-                core.debug("downloading tailscale");
+                core.debug('downloading tailscale');
                 const paths = yield downloadCLI(version);
                 tailscale = paths[0];
                 tailscaled = paths[1];

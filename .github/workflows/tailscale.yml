@@ -18,7 +18,7 @@ jobs:
       - name: Tailscale Action
         uses: ./
         with:
-          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+          authkey: ${{ secrets.AUTH_KEY }}
 
       - name: check for hello.ipn.dev in netmap
         run:
