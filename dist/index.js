@@ -106,7 +106,7 @@ function run() {
             core.info('added paths');
             // start tailscaled
             const tailscaled = path_1.default.join(toolPath, 'tailscaled');
-            yield exec.exec(`sudo ${tailscaled} --state=tailscaled.state --socket=tailscaled.sock &`);
+            yield exec.exec(`sudo ${tailscaled} --state=tailscaled.state --socket=tailscaled.sock 2>tailscaled.log &`);
             const args = core.getInput('args');
             const final_args = ['up', '--authkey', authkey].concat(args.split(' '));
             // tailscale up??
