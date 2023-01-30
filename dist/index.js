@@ -105,7 +105,7 @@ function run() {
             core.addPath(toolPath);
             core.info('added paths');
             // start tailscaled
-            yield exec.exec('tailscaled');
+            yield exec.exec('sudo tailscaled');
             const args = core.getInput('args');
             const final_args = ['up', '--authkey', authkey].concat(args.split(' '));
             // tailscale up??
