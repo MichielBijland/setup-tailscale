@@ -5,7 +5,8 @@ import * as exec from '@actions/exec'
 import * as semver from 'semver'
 import path from 'path'
 
-const toolNames = ['tailscale', 'tailscaled'] as const
+const tailscale = 'tailscale'
+const tailscaled = 'tailscaled'
 
 async function run(): Promise<void> {
   // check os as we only support linux
@@ -48,25 +49,18 @@ async function run(): Promise<void> {
   try {
     const version: string = core.getInput('version')
 
-    let tailscale
-    let tailscaled
-
     // is this version already in our cache
-    tailscale = cache.find(toolNames[0], version)
-    tailscaled = cache.find(toolNames[1], version)
+    let binPath = cache.find(tailscale, version)
 
     // download if one is missing
-    if (!tailscale || !tailscaled) {
+    if (binPath) {
       core.info('downloading tailscale')
-      const paths = await downloadCLI(version)
-      tailscale = paths[0]
-      tailscaled = paths[1]
+      binPath = await downloadCLI(version)
     }
 
     // add both to path for this and future actions to use
-    core.info(`setting tailscale: ${tailscale}`)
-    core.addPath(tailscale)
-    core.addPath(tailscaled)
+    core.addPath(path.join(binPath, tailscale))
+    core.addPath(path.join(binPath, tailscaled))
 
     // start tailscaled
     await exec.exec('tailscaled')
@@ -91,28 +85,20 @@ function getArch(): string {
   return val
 }
 
-export async function downloadCLI(version: string): Promise<[string, string]> {
+export async function downloadCLI(version: string): Promise<string> {
   const url = getReleaseURL(version)
+
   core.info(`downloading ${url}`)
   const artifactPath = await cache.downloadTool(url)
+
   core.info(`artifactPath: ${artifactPath}`)
   const dirPath = await cache.extractTar(artifactPath)
-  core.info(`dirPath: ${dirPath}`)
 
-  return Promise.all([
-    cache.cacheFile(
-      path.join(dirPath, toolNames[0]),
-      toolNames[0],
-      toolNames[0],
-      version
-    ),
-    cache.cacheFile(
-      path.join(dirPath, toolNames[1]),
-      toolNames[1],
-      toolNames[1],
-      version
-    )
-  ])
+  core.info(`dirPath: ${dirPath}`)
+  const binPath = path.join(dirPath, path.parse(url).name)
+
+  core.info(`binPath: ${binPath}`)
+  return await cache.cacheDir(binPath, tailscale, version)
 }
 
 export function getReleaseURL(version: string): string {

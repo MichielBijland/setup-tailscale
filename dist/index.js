@@ -49,7 +49,8 @@ const cache = __importStar(__nccwpck_require__(7784));
 const exec = __importStar(__nccwpck_require__(1514));
 const semver = __importStar(__nccwpck_require__(1383));
 const path_1 = __importDefault(__nccwpck_require__(1017));
-const toolNames = ['tailscale', 'tailscaled'];
+const tailscale = 'tailscale';
+const tailscaled = 'tailscaled';
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         // check os as we only support linux
@@ -90,22 +91,16 @@ function run() {
         }
         try {
             const version = core.getInput('version');
-            let tailscale;
-            let tailscaled;
             // is this version already in our cache
-            tailscale = cache.find(toolNames[0], version);
-            tailscaled = cache.find(toolNames[1], version);
+            let binPath = cache.find(tailscale, version);
             // download if one is missing
-            if (!tailscale || !tailscaled) {
+            if (binPath) {
                 core.info('downloading tailscale');
-                const paths = yield downloadCLI(version);
-                tailscale = paths[0];
-                tailscaled = paths[1];
+                binPath = yield downloadCLI(version);
             }
             // add both to path for this and future actions to use
-            core.info(`setting tailscale: ${tailscale}`);
-            core.addPath(tailscale);
-            core.addPath(tailscaled);
+            core.addPath(path_1.default.join(binPath, tailscale));
+            core.addPath(path_1.default.join(binPath, tailscaled));
             // start tailscaled
             yield exec.exec('tailscaled');
             const args = core.getInput('args');
@@ -134,10 +129,9 @@ function downloadCLI(version) {
         core.info(`artifactPath: ${artifactPath}`);
         const dirPath = yield cache.extractTar(artifactPath);
         core.info(`dirPath: ${dirPath}`);
-        return Promise.all([
-            cache.cacheFile(path_1.default.join(dirPath, toolNames[0]), toolNames[0], toolNames[0], version),
-            cache.cacheFile(path_1.default.join(dirPath, toolNames[1]), toolNames[1], toolNames[1], version)
-        ]);
+        const binPath = path_1.default.join(dirPath, path_1.default.parse(url).name);
+        core.info(`binPath: ${binPath}`);
+        return yield cache.cacheDir(binPath, tailscale, version);
     });
 }
 exports.downloadCLI = downloadCLI;
