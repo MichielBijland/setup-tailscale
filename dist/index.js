@@ -53,7 +53,7 @@ const toolNames = ['tailscale', 'tailscaled'];
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         // check os as we only support linux
-        if (os.platform.name !== 'linux') {
+        if (os.platform() !== 'linux') {
             core.setFailed('Only linux is currently supported.');
         }
         // get authkey
