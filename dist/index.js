@@ -101,9 +101,11 @@ function run() {
             else {
                 core.info('using cached directory');
             }
+            core.info(`toolPath: ${toolPath}`);
             // add both to path for this and future actions to use
             core.addPath(path_1.default.join(toolPath, tailscale));
             core.addPath(path_1.default.join(toolPath, tailscaled));
+            core.info('added paths');
             // start tailscaled
             yield exec.exec('tailscaled');
             const args = core.getInput('args');

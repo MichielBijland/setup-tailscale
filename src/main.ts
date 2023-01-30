@@ -60,9 +60,13 @@ async function run(): Promise<void> {
       core.info('using cached directory')
     }
 
+    core.info(`toolPath: ${toolPath}`)
+
     // add both to path for this and future actions to use
     core.addPath(path.join(toolPath, tailscale))
     core.addPath(path.join(toolPath, tailscaled))
+
+    core.info('added paths')
 
     // start tailscaled
     await exec.exec('tailscaled')
