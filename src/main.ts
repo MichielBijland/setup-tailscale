@@ -9,7 +9,7 @@ const toolNames = ['tailscale', 'tailscaled'] as const
 
 async function run(): Promise<void> {
   // check os as we only support linux
-  if (os.platform.name !== 'linux') {
+  if (os.platform() !== 'linux') {
     core.setFailed('Only linux is currently supported.')
   }
 
