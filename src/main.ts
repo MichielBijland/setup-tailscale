@@ -57,6 +57,7 @@ async function run(): Promise<void> {
 
     // download if one is missing
     if (!tailscale || !tailscaled) {
+      core.debug("downloading tailscale")
       const paths = await downloadCLI(version)
       tailscale = paths[0]
       tailscaled = paths[1]
@@ -91,7 +92,9 @@ function getArch(): string {
 
 export async function downloadCLI(version: string): Promise<[string, string]> {
   const url = getReleaseURL(version)
+  core.debug(`downloading ${url}`)
   const artifactPath = await cache.downloadTool(url)
+  core.debug(`artifactPath: ${artifactPath}`)
   const dirPath = await cache.extractTar(artifactPath)
   return Promise.all([
     cache.cacheFile(
