@@ -1,0 +1,26 @@
+name: 'Setup Tailscale'
+description: 'Sets up tailscale in your GitHub Actions workflow'
+inputs:
+  version:
+    description: 'Tailscale version to use.'
+    required: true
+    default: '1.36.0'
+  authkey:
+    description: 'Provide an auth key to automatically authenticate the node as your user account.'
+    required: false
+    defaul: ''
+  client_id:
+    description: 'Provide an oauth client id to create a authkey.'
+    required: false
+    default: ''
+  client_secret:
+    description: 'Provide an oauth client secret to create a authkey.'
+    required: false
+    default: ''
+  args:
+    description: 'Modifiy default args, authkey and hostname are calculated from above'
+    required: false
+    default: '--accept-routes'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
