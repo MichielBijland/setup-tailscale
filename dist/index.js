@@ -50,7 +50,6 @@ const exec = __importStar(__nccwpck_require__(1514));
 const semver = __importStar(__nccwpck_require__(1383));
 const path_1 = __importDefault(__nccwpck_require__(1017));
 const tailscale = 'tailscale';
-const tailscaled = 'tailscaled';
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         // check os as we only support linux
@@ -103,8 +102,7 @@ function run() {
             }
             core.info(`toolPath: ${toolPath}`);
             // add both to path for this and future actions to use
-            core.addPath(path_1.default.join(toolPath, tailscale));
-            core.addPath(path_1.default.join(toolPath, tailscaled));
+            core.addPath(toolPath);
             core.info('added paths');
             // start tailscaled
             yield exec.exec('tailscaled');

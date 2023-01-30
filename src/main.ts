@@ -6,7 +6,6 @@ import * as semver from 'semver'
 import path from 'path'
 
 const tailscale = 'tailscale'
-const tailscaled = 'tailscaled'
 
 async function run(): Promise<void> {
   // check os as we only support linux
@@ -63,8 +62,7 @@ async function run(): Promise<void> {
     core.info(`toolPath: ${toolPath}`)
 
     // add both to path for this and future actions to use
-    core.addPath(path.join(toolPath, tailscale))
-    core.addPath(path.join(toolPath, tailscaled))
+    core.addPath(toolPath)
 
     core.info('added paths')
 
